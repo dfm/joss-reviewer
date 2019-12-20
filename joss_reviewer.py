@@ -11,6 +11,13 @@ import requests
 import numpy as np
 import pandas as pd
 
+from pkg_resources import get_distribution, DistributionNotFound
+
+try:
+    __version__ = get_distribution(__name__).version
+except DistributionNotFound:
+    __version__ = None
+
 
 SHEET_URL = "https://docs.google.com/spreadsheets/d/{0}/export?format=csv"
 SHEET_URL = SHEET_URL.format("1PAPRJ63yq9aPC1COLjaQp8mHmEq3rZUzwUYxTulyu78")
@@ -228,8 +235,12 @@ def list_reviewers(
                 sys.stdout.write("\n")
 
 
-if __name__ == "__main__":
+def main():
     import argparse
+
+    if "--version" in sys.argv or "-v" in sys.argv:
+        print(__version__)
+        return
 
     parser = argparse.ArgumentParser(description="Find me some reviewers!")
     parser.add_argument(
@@ -253,6 +264,9 @@ if __name__ == "__main__":
         action="store_true",
         help="Don't list info from GitHub API",
     )
+    parser.add_argument(
+        "-v", "--version", action="store_true", help="Show the version number",
+    )
     args = parser.parse_args()
 
     list_reviewers(
@@ -261,3 +275,7 @@ if __name__ == "__main__":
         count=args.num,
         use_github=not args.no_github,
     )
+
+
+if __name__ == "__main__":
+    main()
