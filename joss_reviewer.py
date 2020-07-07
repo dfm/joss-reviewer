@@ -210,6 +210,11 @@ def list_reviewers(
         if gh_info is None:
             continue
         user_info = gh_info.get("data", {}).get("user", {})
+        name = user_info.get("name")
+        if name is not None:
+            sys.stdout.write(
+                "name: {0}\n".format(name)
+            )
         bio = user_info.get("bio", None)
         if bio is not None:
             sys.stdout.write(
